@@ -1,7 +1,6 @@
 import art
 import random
-
-cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+import replit
 
 def number(draw_cards):
     draw_cards = []
@@ -10,53 +9,67 @@ def number(draw_cards):
         draw_cards.append(draw)
     return draw_cards
 
-player = number(cards)
-dealer = number(cards)
+def summation(cards_list):
+    if 11 in cards_list and sum(cards_list) > 21:
+        cards_list.remove(11)
+        print(cards_list)
+        cards_list.append(1)
+        print(cards_list)
+        print(sum(cards_list))
+    return sum(cards_list)
 
-print(art.logo)
-print(f"Your cards: {player}")
-print(f"Dealer's first card: {dealer[0]}")
-
-player_summation = 0
-for card in player:
-    player_summation += card
-
-dealer_summation = 0
-for card in dealer:
-    dealer_summation += card
-
-hit = True
-while hit:
-    player_choice = input("Type 'y' to get another card, type 'n' to pass: ").lower()
-    if player_choice[0] == "y":
-        draw = random.choice(cards)
-        player.append(draw)
-        player_summation += player[-1]
-        print(f"Your hand {player}")
-        if player_summation >= 21:
-            hit = False
-    if dealer_summation <= 18:
-        draw = random.choice(cards)
-        dealer.append(draw)
-        dealer_summation += dealer[-1]
-        if dealer_summation > 21:
-            hit = False
+cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+play = True
+while play:
+    play = input("Do you want to play? 'y' to yes or 'n' to exit\n").lower()
+    if play[0] == 'n':
+        play = False
     else:
-        hit = False
-        
-print(f"Your final hand: {player} = {player_summation}")
-print(f"Computer final hand: {dealer} = {dealer_summation}")
+        replit.clear()
+        player = number(cards)
+        dealer = number(cards)
 
-if player_summation > dealer_summation and player_summation <= 21:
-    print("You win!")
-elif player_summation == dealer_summation:
-    print("Draw")
-else:
-    print("You lose!")
+        print(art.logo)
+        print(f"Your cards: {player}")
+        print(f"Dealer's first card: {dealer[0]}")
 
-##################### Hints #####################
+        player_summation = summation(player)
+        dealer_summation = summation(dealer)
 
-#Hint 8: Inside calculate_score() check for an 11 (ace). If the score is already over 21, remove the 11 and replace it with a 1. You might need to look up append() and remove().
+        hit = True
+        while hit:
+            player_choice = input("Type 'y' to get another card, type 'n' to pass: ").lower()
+            if player_choice[0] == "y":
+                draw = random.choice(cards)
+                player.append(draw)
+                player_summation = summation(player)
+                print(f"Your hand {player}")
+                if player_summation >= 21:
+                    hit = False
+            else:
+                hit = False
 
-#Hint 14: Ask the user if they want to restart the game. If they answer yes, clear the console and start a new game of blackjack and show the logo from art.py.
+        while dealer_summation <= 18:
+            draw = random.choice(cards)
+            dealer.append(draw)
+            dealer_summation = summation(dealer)
+
+        if player_summation > 21:
+            print(f"Your final hand: {player} = {player_summation}")
+            print("You lose!")
+        elif dealer_summation > 21:
+            print(f"Computer final hand: {dealer} = {dealer_summation}")
+            print("You win!")
+        elif player_summation > dealer_summation and player_summation <= 21:
+            print(f"Your final hand: {player} = {player_summation}")
+            print(f"Computer final hand: {dealer} = {dealer_summation}")
+            print("You win!")
+        elif dealer_summation > player_summation and dealer_summation <= 21:
+            print(f"Your final hand: {player} = {player_summation}")
+            print(f"Computer final hand: {dealer} = {dealer_summation}")
+            print("You lose!")
+        else:
+            print(f"Your final hand: {player} = {player_summation}")
+            print(f"Computer final hand: {dealer} = {dealer_summation}")
+            print("Draw")
 
